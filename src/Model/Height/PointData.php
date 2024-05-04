@@ -2,10 +2,8 @@
 
 namespace App\Model\Height;
 
-class PointHeightData
+class PointData
 {
-
-
     public function __construct(
         public readonly int $position,
         public readonly string $point,

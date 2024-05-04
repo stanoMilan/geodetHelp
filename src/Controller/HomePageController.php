@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use App\Model\Height\PointHeightData;
+use App\Model\Height\PointData;
+use App\Model\Position\PointPositionData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,8 +18,9 @@ class HomePageController extends AbstractController
     #[Route('/', name: 'app_home_page')]
     public function index(): Response
     {
-        $basePath = '../examplefiles/';
-     $pointsHeightData = $this->loadHeightDataFromFile(fileName: $basePath . 'protokol_vyska.txt');
+    $basePath = '../examplefiles/';
+    $points = $this->loadHeightDataFromFile(fileName: $basePath . 'protokol_vyska.txt');
+    $points = $this->loadPositionDataFromFile(fileName: $basePath . 'protokol_poloha.txt', data: $points);
 
      return $this->render('home_page/index.html.twig', [
             'controller_name' => 'HomePageController',
@@ -28,7 +30,7 @@ class HomePageController extends AbstractController
 
     /**
      * @param string $fileName
-     * @return PointHeightData[]
+     * @return PointData[]
      */
     private function loadHeightDataFromFile(string $fileName): array
     {
@@ -45,7 +47,7 @@ class HomePageController extends AbstractController
             // $match[5] je vyrovnaná hodnota
             // $match[6] je stř.ch. konf.i.
             // $match[7] je stř.ch. konf.i.
-            $pointHeightsData[] = new PointHeightData(
+            $pointHeightsData[$match[2]]['h'] = new PointData(
                 (int)$match[1],
                 $match[2],
                 (float)$match[3],
@@ -57,5 +59,41 @@ class HomePageController extends AbstractController
         }
 
         return $pointHeightsData;
+    }
+
+    /**
+     * @param string $fileName
+     * @return PointData[]
+     */
+    private function loadPositionDataFromFile(string $fileName, array $data)
+    {
+
+        $inputText = file_get_contents($fileName);
+        $lines = explode("\n", $inputText);
+        $currentPoint = null;
+        foreach ($lines as $line) {
+            $line = trim($line);
+            $columns = preg_split('/\s+/', $line);
+            if (preg_match('/^\s*([A-Z0-9-]+)\s*$/', $line, $matches)) {
+                $currentPoint = $matches[1];
+            } elseif ( $currentPoint !== null && count($columns) >= 7)
+            {
+                    $x = (float)$columns[2];
+                    $y = (float)$columns[3];
+                    $xCorrection = (float)$columns[4];
+                    $yCorrection = (float)$columns[5];
+                    $xAdjusted = (float)$columns[6];
+                $data[$currentPoint][$columns[1]] = new PointData(
+                        $columns[0],
+                        $currentPoint,
+                        $x,
+                        $y,
+                        $xCorrection,
+                        $yCorrection,
+                        $xAdjusted
+                    );
+            }
+        }
+        return $data;
     }
 }
