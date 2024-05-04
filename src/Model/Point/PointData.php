@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Height;
+namespace App\Model\Point;
 
 class PointData
 {
