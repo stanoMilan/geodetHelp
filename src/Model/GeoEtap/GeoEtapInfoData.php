@@ -8,9 +8,9 @@ class GeoEtapInfoData
 {
     public function __construct(
         public readonly string $point,
-        public readonly PointData $x,
-        public readonly PointData $y,
-        public readonly PointData $h,
+        public readonly ?PointData $x,
+        public readonly ?PointData $y,
+        public readonly ?PointData $h,
     )
     {
     }

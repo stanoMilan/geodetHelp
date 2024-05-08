@@ -31,12 +31,12 @@ class XlsxWriterFacade
         foreach ($geoData as $data) {
             $rowIndex++;
             $sheet->setCellValue('A' . $rowIndex, $data->point);
-            $sheet->setCellValue('B' . $rowIndex, $data->y->adjustedValue);
-            $sheet->setCellValue('C' . $rowIndex, $data->x->adjustedValue);
-            $sheet->setCellValue('D' . $rowIndex, $data->h->adjustedValue);
-            $sheet->setCellValue('E' . $rowIndex, $data->y->stdDevConfInterval1);
-            $sheet->setCellValue('F' . $rowIndex, $data->x->stdDevConfInterval1);
-            $sheet->setCellValue('G' . $rowIndex, $data->h->stdDevConfInterval1);
+            $sheet->setCellValue('B' . $rowIndex, $data->y?->adjustedValue);
+            $sheet->setCellValue('C' . $rowIndex, $data->x?->adjustedValue);
+            $sheet->setCellValue('D' . $rowIndex, $data->h?->adjustedValue);
+            $sheet->setCellValue('E' . $rowIndex, $data->y?->stdDevConfInterval1);
+            $sheet->setCellValue('F' . $rowIndex, $data->x?->stdDevConfInterval1);
+            $sheet->setCellValue('G' . $rowIndex, $data->h?->stdDevConfInterval1);
         }
         return new Xlsx($spreadsheet);
     }

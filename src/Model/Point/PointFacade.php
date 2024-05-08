@@ -17,9 +17,9 @@ class PointFacade
         $points = $this->loadPositionDataFromFile(data: $xyData, hData: $points);
         $etapInfoData = [];
         foreach ($points as $pointName => $data){
-            $x = $data['x'];
-            $y = $data['y'];
-            $h = $data['h'];
+            $x = array_key_exists('x', $data) ? $data['x'] : null;
+            $y = array_key_exists('y', $data) ? $data['y'] : null;
+            $h = array_key_exists('h', $data) ? $data['h'] : null;
             $etapInfoData[$pointName] = new GeoEtapInfoData(
                 $pointName,
                 $x,
@@ -78,8 +78,8 @@ class PointFacade
         foreach ($lines as $line) {
             $line = trim($line);
             $columns = preg_split('/\s+/', $line);
-            if (preg_match('/^\s*([A-Z0-9-]+)\s*$/', $line, $matches)) {
-                $currentPoint = $matches[1];
+            if (count($columns) === 1 && $columns[0] !== '') {
+                $currentPoint = $columns[0];
             } elseif ( $currentPoint !== null && count($columns) >= 7)
             {
                 $x = (float)$columns[2];
@@ -88,7 +88,7 @@ class PointFacade
                 $yCorrection = (float)$columns[5];
                 $xAdjusted = (float)$columns[6];
                 $hData[$currentPoint][$columns[1]] = new PointData(
-                    $columns[0],
+                    (int)$columns[0],
                     $currentPoint,
                     $x,
                     $y,

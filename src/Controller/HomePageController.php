@@ -19,7 +19,7 @@ class HomePageController extends AbstractController
     {
     }
 
-    #[Route('/', name: 'app_home_page')]
+    #[Route('/test', name: 'app_home_page')]
     public function index(): Response
     {
     $basePath = '../examplefiles/';
