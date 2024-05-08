@@ -11,7 +11,7 @@ class PointFacade
      * @param string $xyData
      * @return GeoEtapInfoData[]
      */
-    public function getGeoEtapInfoData(string $hData, string $xyData, string $vyrovnanePolohaData): array
+    public function getGeoEtapInfoData(string $hData, string $xyData, string $vyrovnanePolohaData, string $vyrovnaneVyskaData): array
     {
         $points = $this->loadHeightDataFromFile(data: $hData);
         $points = $this->loadPositionDataFromFile(data: $xyData, hData: $points);
@@ -30,18 +30,29 @@ class PointFacade
             $points[$columns[0]]['XyData'] = $xyData;
         }
 
+        $rows = explode("\n", $vyrovnaneVyskaData);
+
+        foreach ($rows as $row) {
+            $columns = preg_split('/\s+/', $row, -1, PREG_SPLIT_NO_EMPTY);
+           if (count($columns) ===4) {
+               $points[$columns[0]]['hData'] = $columns[3];
+           }
+        }
+
         $etapInfoData = [];
         foreach ($points as $pointName => $data) {
             $x = array_key_exists('x', $data) ? $data['x'] : null;
             $y = array_key_exists('y', $data) ? $data['y'] : null;
             $h = array_key_exists('h', $data) ? $data['h'] : null;
             $vyrovananeXyData = array_key_exists('XyData', $data) ? $data['XyData'] : null;
+            $vyrovananeHData = array_key_exists('hData', $data) ? $data['hData'] : null;
             $etapInfoData[$pointName] = new GeoEtapInfoData(
                 $pointName,
                 $x,
                 $y,
                 $h,
-                $vyrovananeXyData
+                $vyrovananeXyData,
+                $vyrovananeHData
             );
         }
         sort($etapInfoData);

@@ -12,7 +12,8 @@ class GeoEtapInfoData
         public readonly ?PointData $x,
         public readonly ?PointData $y,
         public readonly ?PointData $h,
-        public readonly ?XyData $XyData
+        public readonly ?XyData $XyData,
+        public readonly ?float $hData,
     )
     {
     }

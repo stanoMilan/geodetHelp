@@ -27,6 +27,7 @@ class HomePageController extends AbstractController
         hData: file_get_contents($basePath . 'protokol_vyska.txt'),
         xyData: file_get_contents($basePath . 'protokol_poloha.txt'),
         vyrovnanePolohaData: file_get_contents($basePath . 'vyrovnane_poloha.txt'),
+        vyrovnaneVyskaData: file_get_contents($basePath . 'vyrovnane_vyska.stx')
     );
     $writer = $this->xlsxWriterFacade->createXlsxDataFromGeoData(geoData: $geoInfoData);
 

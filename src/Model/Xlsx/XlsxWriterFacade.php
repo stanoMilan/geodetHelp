@@ -33,7 +33,7 @@ class XlsxWriterFacade
             $sheet->setCellValue('A' . $rowIndex, $data->point);
             $sheet->setCellValue('B' . $rowIndex, $data->XyData?->y);
             $sheet->setCellValue('C' . $rowIndex, $data->XyData?->x);
-            $sheet->setCellValue('D' . $rowIndex, $data->h?->adjustedValue);
+            $sheet->setCellValue('D' . $rowIndex, $data->hData);
             $sheet->setCellValue('E' . $rowIndex, $data->y?->stdDevConfInterval1);
             $sheet->setCellValue('F' . $rowIndex, $data->x?->stdDevConfInterval1);
             $sheet->setCellValue('G' . $rowIndex, $data->h?->stdDevConfInterval1);
