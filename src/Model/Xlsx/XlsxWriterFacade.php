@@ -31,8 +31,8 @@ class XlsxWriterFacade
         foreach ($geoData as $data) {
             $rowIndex++;
             $sheet->setCellValue('A' . $rowIndex, $data->point);
-            $sheet->setCellValue('B' . $rowIndex, $data->y?->adjustedValue);
-            $sheet->setCellValue('C' . $rowIndex, $data->x?->adjustedValue);
+            $sheet->setCellValue('B' . $rowIndex, $data->XyData?->y);
+            $sheet->setCellValue('C' . $rowIndex, $data->XyData?->x);
             $sheet->setCellValue('D' . $rowIndex, $data->h?->adjustedValue);
             $sheet->setCellValue('E' . $rowIndex, $data->y?->stdDevConfInterval1);
             $sheet->setCellValue('F' . $rowIndex, $data->x?->stdDevConfInterval1);
