@@ -11,7 +11,7 @@ class XlsxWriterFacade
 
 
     /**
-     * @param GeoEtapInfoData[] $geoData
+     * @param array $geoData
      * @return Xlsx
      */
     public function createXlsxDataFromGeoData(
@@ -38,7 +38,11 @@ class XlsxWriterFacade
             $sheet->setCellValue('F' . $rowIndex, $data->x?->stdDevConfInterval1);
             $sheet->setCellValue('G' . $rowIndex, $data->h?->stdDevConfInterval1);
         }
-        return new Xlsx($spreadsheet);
+        $xlsx = new Xlsx($spreadsheet);
+        $filename = microtime() . '.xlsx';
+       // $xlsx->save($filename);
+
+        return $xlsx;
     }
 
 }

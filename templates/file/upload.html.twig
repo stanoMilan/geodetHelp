@@ -1,0 +1,78 @@
+{# templates/file/upload.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Upload súborov{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .btn-submit {
+            display: inline-block;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition-duration: 0.4s;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .btn-submit:after {
+            content: "";
+            background: #f1f1f1;
+            display: block;
+            position: absolute;
+            z-index: -1;
+            transition: all 0.4s;
+        }
+
+        .btn-submit:hover {
+            background-color: #45a049;
+            color: white;
+        }
+
+        .btn-submit:hover:after {
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        Upload súborov
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                        <div class="mb-3">
+                            {{ form_label(form.files, 'Vyberte súbory', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.files, {'attr': {'class': 'form-control', 'multiple': 'multiple', 'required': 'required'}}) }}
+                            {% if form.files.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.files.vars.errors %}
+                                        {{ error.message }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <button class="btn-submit" type="submit">Odoslať</button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

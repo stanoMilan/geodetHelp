@@ -3,16 +3,37 @@
 namespace App\Model\Point;
 
 use App\Model\GeoEtap\GeoEtapInfoData;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use function PHPUnit\Framework\stringContains;
 
 class PointFacade
 {
+    public const POSITION_FILE_NAME = 'protokol_poloha';
+    public const HEIGHT_FILE_NAME = 'protokol_vyska';
+    public const BALANCED_POSITION_FILE_NAME = 'vyrovnane_poloha';
+    public const BALANCED_HEIGHT_FILE_NAME = 'vyrovnane_vyska';
+
     /**
-     * @param string $hData
-     * @param string $xyData
+     * @param UploadedFile[] $files
      * @return GeoEtapInfoData[]
      */
-    public function getGeoEtapInfoData(string $hData, string $xyData, string $vyrovnanePolohaData, string $vyrovnaneVyskaData): array
+    public function getGeoEtapInfoData(array $files): array
     {
+        $hData = null;
+        $xyData = null;
+        $vyrovnanePolohaData = null;
+        $vyrovnaneVyskaData = null;
+        foreach ($files as $file) {
+            if (str_contains($file->getClientOriginalName(), self::POSITION_FILE_NAME)) {
+                $xyData = file_get_contents($file->getPathname());
+            } elseif (str_contains($file->getClientOriginalName(), self::HEIGHT_FILE_NAME)) {
+                $hData = file_get_contents($file->getPathname());
+            } elseif (str_contains($file->getClientOriginalName(), self::BALANCED_POSITION_FILE_NAME)) {
+                $vyrovnanePolohaData = file_get_contents($file->getPathname());
+            } elseif (str_contains($file->getClientOriginalName(), self::BALANCED_HEIGHT_FILE_NAME)) {
+                $vyrovnaneVyskaData = file_get_contents($file->getPathname());
+            }
+        }
         $points = $this->loadHeightDataFromFile(data: $hData);
         $points = $this->loadPositionDataFromFile(data: $xyData, hData: $points);
         $rows = explode("\n", $vyrovnanePolohaData);

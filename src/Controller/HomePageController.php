@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Form\PointsFilesDataFormType;
 use App\Model\Point\PointFacade;
 use App\Model\Xlsx\XlsxWriterFacade;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,30 +21,30 @@ class HomePageController extends AbstractController
     {
     }
 
-    #[Route('/test', name: 'app_home_page')]
-    public function index(): Response
+    #[Route('/', name: 'app_home_page')]
+    public function index(Request $request): Response|StreamedResponse
     {
-    $basePath = '../examplefiles/';
-    $geoInfoData = $this->pointFacade->getGeoEtapInfoData(
-        hData: file_get_contents($basePath . 'protokol_vyska.txt'),
-        xyData: file_get_contents($basePath . 'protokol_poloha.txt'),
-        vyrovnanePolohaData: file_get_contents($basePath . 'vyrovnane_poloha.txt'),
-        vyrovnaneVyskaData: file_get_contents($basePath . 'vyrovnane_vyska.stx')
-    );
-    $writer = $this->xlsxWriterFacade->createXlsxDataFromGeoData(geoData: $geoInfoData);
+        $form = $this->createForm(PointsFilesDataFormType::class);
+        $form->handleRequest($request);
 
+    if ($form->isSubmitted() && $form->isValid()) {
+        $geoInfoData = $this->pointFacade->getGeoEtapInfoData(files: $form->get('files')->getData());
+        $writer = $this->xlsxWriterFacade->createXlsxDataFromGeoData(geoData: $geoInfoData);
+        $response =  new StreamedResponse(
+            function () use ($writer) {
+                $writer->save('php://output');
+            }
+        );
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment;filename='. microtime() .'.xlsx');
+        $response->headers->set('Cache-Control','max-age=0');
 
-    $response =  new StreamedResponse(
-        function () use ($writer) {
-            $writer->save('php://output');
-        }
-    );
-    $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-    $response->headers->set('Content-Disposition', 'attachment;filename='. microtime() .'.xlsx');
-    $response->headers->set('Cache-Control','max-age=0');
+        return $response;
+    }
 
-    return $response;
-
+        return $this->render('file/upload.html.twig', [
+            'form' => $form->createView(),
+        ]);
 
     }
 }
