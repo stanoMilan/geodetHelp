@@ -30,12 +30,12 @@ class XlsxWriterFacade
         foreach ($geoData as $data) {
             $rowIndex++;
             $sheet->setCellValue('A' . $rowIndex, $data->point);
-            $sheet->setCellValue('B' . $rowIndex, $data->XyData->y);
-            $sheet->setCellValue('C' . $rowIndex, $data->XyData->x);
+            $sheet->setCellValue('B' . $rowIndex, $data->XyData === null ? null : $data->XyData->y);
+            $sheet->setCellValue('C' . $rowIndex, $data->XyData === null ? null : $data->XyData->x);
             $sheet->setCellValue('D' . $rowIndex, $data->hData);
-            $sheet->setCellValue('E' . $rowIndex, $data->y->stdDevConfInterval1);
-            $sheet->setCellValue('F' . $rowIndex, $data->x->stdDevConfInterval1);
-            $sheet->setCellValue('G' . $rowIndex, $data->h->stdDevConfInterval1);
+            $sheet->setCellValue('E' . $rowIndex, $data->y === null ? null : $data->y->stdDevConfInterval1);
+            $sheet->setCellValue('F' . $rowIndex,  $data->x === null ? null : $data->x->stdDevConfInterval1);
+            $sheet->setCellValue('G' . $rowIndex, $data->h === null ? null : $data->h->stdDevConfInterval1);
         }
         $xlsx = new Xlsx($spreadsheet);
 
