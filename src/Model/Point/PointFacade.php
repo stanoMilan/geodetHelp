@@ -34,8 +34,8 @@ class PointFacade
                 $vyrovnaneVyskaData = file_get_contents($file->getPathname());
             }
         }
-        $points = $this->loadHeightDataFromFile(data: $hData);
-        $points = $this->loadPositionDataFromFile(data: $xyData, hData: $points);
+        $points = $this->loadHeightDataFromFile($hData);
+        $points = $this->loadPositionDataFromFile( $xyData, $points);
         $rows = explode("\n", $vyrovnanePolohaData);
 
         foreach ($rows as $row) {
@@ -44,9 +44,9 @@ class PointFacade
                 continue;
             }
           $xyData = new XyData(
-               point:  $columns[0],
-               x:  (float)$columns[2],
-               y:  (float)$columns[1],
+                $columns[0],
+              (float)$columns[2],
+                (float)$columns[1],
            );
             $points[$columns[0]]['XyData'] = $xyData;
         }
